@@ -26,6 +26,7 @@ from google.colab import _system_commands
 from ipykernel import jsonutil
 from ipykernel import zmqshell
 from IPython.core import alias
+from IPython.core import compilerop
 from IPython.core import inputsplitter
 from IPython.core import interactiveshell
 from IPython.core import oinspect
@@ -69,6 +70,10 @@ class Shell(zmqshell.ZMQInteractiveShell):
     """Initialize colab's custom history manager."""
     self.history_manager = _history.ColabHistoryManager(shell=self, parent=self)
     self.configurables.append(self.history_manager)
+
+  def init_instance_attrs(self):
+    self.compiler_class = compilerop.CachingCompiler
+    super().init_instance_attrs()
 
   def _should_use_native_system_methods(self):
     # TODO: Update to match intended values, as appropriate.
